@@ -1,24 +1,46 @@
 from collections import deque
 
+queue = deque() #Queue for BFS
+stack = [] #Stack for DFS
+
+state_path = []
+dir_path = []
+explored = list()
 
 def bfs(initial_state, goal_state):
-    frontier = deque()
-    frontier.append(createNode(initial_state, None, "",0, 0))
-    explored = set()
-    while len(frontier):
-        node = frontier.popleft()
-        explored.add(node)
-        print(node.state)
+
+    queue.append(createNode(initial_state, None, "", 0, 0))
+    while len(queue):
+        node = queue.popleft()
+        explored.append(list(node.state))
 
         if node.state == goal_state:
             return node
         neighbours = expandNode(node)
 
         for neighbour in neighbours:
-            if (neighbour not in frontier) and (neighbour not in explored):
-                frontier.append(neighbour)
+            if (neighbour not in queue) and (neighbour.state not in explored):
+                queue.append(neighbour)
     return False
 
+
+
+def dfs(initial_state, goal_state):
+
+    stack.append(createNode(initial_state, None, "", 0, 0))
+    while len(stack):
+        node = stack.pop()
+        explored.append(list(node.state))
+
+        if node.state == goal_state:
+            return node
+        neighbours = expandNode(node)
+        print(explored.__len__())
+
+        for neighbour in neighbours:
+            if (neighbour not in stack) and (neighbour.state not in explored):
+                stack.append(neighbour)
+    return False
 
 def createNode(state, parent, operation, cost, depth):
     return Node(state, parent, operation, cost, depth)
@@ -81,17 +103,25 @@ class Node:
         self.depth = depth
         self.cost = cost
 
-node = bfs([1, 2, 3, 4, 5, 6, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+node = dfs([1,4,2,6,5,8,7,3,0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
 node = Node(node.state,node.parent,node.operation,node.cost,node.depth)
 
-path = []
-def findEveryThing(node: Node):
-    path.append(node.operation)
+
+
+def findPath(node: Node):
+    dir_path.append(node.operation)
+    state_path.append(node.state)
     if node.operation == "":
         return None
     else:
-        return findEveryThing(node.parent)
+        return findPath(node.parent)
 
 
-findEveryThing(node)
-print([i for i in path[::-1] if i is not ""])
+findPath(node)
+print([i for i in dir_path[::-1] if i is not ""]) #Direction path
+#State path
+for i in state_path[::-1]:
+    print(i,)
+print(node.cost) #Path cost
+print(node.depth + 1) #Path depth
+print(explored.__len__())

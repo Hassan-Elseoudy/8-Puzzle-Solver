@@ -1,5 +1,6 @@
 from collections import deque
 from queue import PriorityQueue
+from typing import Union
 
 queue = deque()  # Queue for BFS
 stack = deque()  # Stack for DFS
@@ -75,11 +76,11 @@ def Asearch(initial_state, goal_state):
         for neighbour in neighbours:
             if (neighbour not in temp) and (neighbour.state not in explored):
                 heapqu.put(neighbour)
-            elif (neighbour in temp):  # agebo mn l temp w a3dl fel cost bta3to
+            elif neighbour in temp:  # agebo mn l temp w a3dl fel cost bta3to
                 current_nodeIndex: int = temp.index(neighbour)
                 current_node = temp[current_nodeIndex]
                 temp.remove(current_node)
-                current_node.cost = int(manhatn(current_node.state)) + min(current_node.depth, neighbour.depth)
+                current_node.cost = int(manhatn(current_node.state)) + neighbour.depth
                 print(current_node.cost)
                 temp.append(current_node)
 
@@ -132,7 +133,7 @@ def left(state):
 
 
 def manhatn(state):
-    manhatn_cost = 0
+    manhatn_cost : int = 0
     state = list(state)
     for i in range(9):
         manhatn_cost += abs(state[i] / 3 - (i % 3)) + abs(state[i] % 3 - (i / 3))
@@ -150,24 +151,24 @@ class Node:
 
     def __lt__(self, other):
         if str(self.algorithm) == "ast":
-            return (self.cost < other.cost)
+            return self.cost < other.cost
         else:
             pass
 
     def __eq__(self, other):
         if str(self.algorithm) == "ast":
-            return (self.cost == other.cost)
+            return self.cost == other.cost
         else:
             pass
 
     def __contains__(self, item):
         if str(self.algorithm) == "ast":
-            return (self.state == item.state)
+            return self.state == item.state
         else:
             pass
 
 
-node = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+node: Union[Node, bool] = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
 node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
 
 

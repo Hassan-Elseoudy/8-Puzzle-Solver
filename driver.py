@@ -9,6 +9,7 @@ state_path = []
 dir_path = []
 explored = list()
 
+
 def bfs(initial_state, goal_state):
     queue.append(createNode(initial_state, "bfs", None, "", 0, 0))
     while len(queue):
@@ -24,11 +25,12 @@ def bfs(initial_state, goal_state):
                 queue.append(neighbour)
     return False
 
+
 def dfs(initial_state, goal_state):
-    stack.append(createNode(initial_state,"dfs", None, "", 0, 0))
+    stack.append(createNode(initial_state, "dfs", None, "", 0, 0))
     while len(stack):
         current_node: Node = stack.pop()
-        explored.append((current_node.state))
+        explored.append(current_node.state)
 
         if current_node.state == goal_state:
             return current_node
@@ -39,25 +41,27 @@ def dfs(initial_state, goal_state):
                 stack.append(neighbour)
     return False
 
+
 def createNode(state, algo, parent, operation, cost, depth):
     return Node(state, str(algo), parent, operation, cost, depth)
 
+
 def expandNode(node):
     children = list()
-    children.append(createNode(down(node.state), node.algo, node, "DOWN", node.cost + 1, node.depth + 1))
-    children.append(createNode(right(node.state),node.algo, node, "RIGHT", node.cost + 1, node.depth + 1))
-    children.append(createNode(left(node.state), node.algo,  node, "LEFT", node.cost + 1, node.depth + 1))
-    children.append(createNode(up(node.state),node.algo,  node, "UP", node.cost + 1, node.depth + 1))
+    children.append(createNode(down(node.state), node.algorithm, node, "DOWN", node.cost + 1, node.depth + 1))
+    children.append(createNode(right(node.state), node.algorithm, node, "RIGHT", node.cost + 1, node.depth + 1))
+    children.append(createNode(left(node.state), node.algorithm, node, "LEFT", node.cost + 1, node.depth + 1))
+    children.append(createNode(up(node.state), node.algorithm, node, "UP", node.cost + 1, node.depth + 1))
     return [child for child in children if child.state is not None]
 
-def Asearch(initial_state, goal_state):
 
-    heapqu.put(createNode(initial_state,"ast", None, "", 0, 0))
+def Asearch(initial_state, goal_state):
+    heapqu.put(createNode(initial_state, "ast", None, "", 0, 0))
     while not heapqu.empty():
 
         temp = list()
         temp.clear()
-        node : Node = heapqu.get()
+        node: Node = heapqu.get()
         explored.append(node.state)
 
         if node.state == goal_state:
@@ -65,15 +69,14 @@ def Asearch(initial_state, goal_state):
 
         neighbours = expandNode(node)
 
-        while not heapqu.empty() :
+        while not heapqu.empty():
             temp.append(heapqu.get())
-
 
         for neighbour in neighbours:
             if (neighbour not in temp) and (neighbour.state not in explored):
                 heapqu.put(neighbour)
-            elif (neighbour in temp): #agebo mn l temp w a3dl fel cost bta3to
-                current_nodeIndex = temp.index(neighbour)
+            elif (neighbour in temp):  # agebo mn l temp w a3dl fel cost bta3to
+                current_nodeIndex: int = temp.index(neighbour)
                 current_node = temp[current_nodeIndex]
                 temp.remove(current_node)
                 current_node.cost = int(manhatn(current_node.state)) + min(current_node.depth, neighbour.depth)
@@ -81,7 +84,9 @@ def Asearch(initial_state, goal_state):
                 temp.append(current_node)
 
         for i in range(len(temp)):
-           heapqu.put(temp[i])
+            heapqu.put(temp[i])
+
+        print(heapqu.qsize())
 
     return False
 
@@ -125,6 +130,7 @@ def left(state):
     else:
         return None
 
+
 def manhatn(state):
     manhatn_cost = 0
     state = list(state)
@@ -132,47 +138,50 @@ def manhatn(state):
         manhatn_cost += abs(state[i] / 3 - (i % 3)) + abs(state[i] % 3 - (i / 3))
     return manhatn_cost
 
+
 class Node:
-    def __init__(self,state, algorithm, parent, operation, depth, cost):
+    def __init__(self, state, algorithm, parent, operation, depth, cost):
         self.state = state
-        self.algo = algorithm
+        self.algorithm = algorithm
         self.parent = parent
         self.operation = operation
         self.depth = depth
         self.cost = cost
 
-
     def __lt__(self, other):
-        if(str(self.algo) == "ast"):
-           return(self.cost < other.cost)
+        if str(self.algorithm) == "ast":
+            return (self.cost < other.cost)
         else:
-           pass
-    def __eq__(self, other):
-        if (str(self.algo) == "ast"):
-           return (self.cost == other.cost)
-        else:
-           pass
-    def __contains__(self, item):
-        if (str(self.algo) == "ast"):
-           return (self.state < item.cost)
-        else:
-           pass
+            pass
 
-node = Asearch([3,1,2,6,4,5,7,8,0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
-node = Node(node.state, node.algo, node.parent, node.operation, node.cost, node.depth)
+    def __eq__(self, other):
+        if str(self.algorithm) == "ast":
+            return (self.cost == other.cost)
+        else:
+            pass
+
+    def __contains__(self, item):
+        if str(self.algorithm) == "ast":
+            return (self.state == item.state)
+        else:
+            pass
+
+
+node = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
 
 
 def findPath(node: Node):
     dir_path.append(node.operation)
     state_path.append(node.state)
-    if node.state!= [0, 1, 2, 3, 4, 5, 6, 7, 8]:
+    if node.depth == 0:
         return None
     else:
         return findPath(node.parent)
 
 
 findPath(node)
-print([i for i in dir_path[::-1] if i is not ""])  # Direction path
+print([i for i in dir_path[::-1] if i is not ''])  # Direction path
 # State path
 for i in state_path[::-1]:
     print(i, )

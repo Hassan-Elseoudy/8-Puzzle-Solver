@@ -1,6 +1,10 @@
 from collections import deque
 from queue import PriorityQueue
 from typing import Union
+import timeit
+
+start = timeit.default_timer()
+
 
 queue = deque()  # Queue for BFS
 stack = deque()  # Stack for DFS
@@ -81,13 +85,13 @@ def Asearch(initial_state, goal_state):
                 current_node = temp[current_nodeIndex]
                 temp.remove(current_node)
                 current_node.cost = int(manhatn(current_node.state)) + neighbour.depth
-                print(current_node.cost)
+         #       print(current_node.cost)
                 temp.append(current_node)
 
         for i in range(len(temp)):
             heapqu.put(temp[i])
 
-        print(heapqu.qsize())
+        #print(heapqu.qsize())
 
     return False
 
@@ -168,7 +172,7 @@ class Node:
             pass
 
 
-node: Union[Node, bool] = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+node: Union[Node, bool] = bfs([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
 node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
 
 
@@ -180,12 +184,24 @@ def findPath(node: Node):
     else:
         return findPath(node.parent)
 
-
+fw = open("output.txt" , "w")
 findPath(node)
-print([i for i in dir_path[::-1] if i is not ''])  # Direction path
 # State path
+stop = timeit.default_timer()
 for i in state_path[::-1]:
-    print(i, )
+    print(i)
+fw.write("path_to_goal:")  # Direction path
+fw.write(str([i for i in dir_path[::-1] if i is not '']))
+fw.write("\ncost_of_path:")  # Path cost
+fw.write(str(node.cost))
+fw.write("\nnodes_expanded:")#nodes explored
+fw.write(str(explored.__len__()))
+fw.write("\nsearch_depth:")  # Path depth
+fw.write(str(node.depth + 1))
+fw.write("\nrunning_time:")
+fw.write(str(stop - start))
+fw.close()
+print([i for i in dir_path[::-1] if i is not ''])  # Direction path
 print(node.cost)  # Path cost
+print(explored.__len__()) #nodes explored
 print(node.depth + 1)  # Path depth
-print(explored.__len__())

@@ -218,7 +218,12 @@ canvas.pack()
 # State path
 stop = timeit.default_timer()
 #basicwindow.mainloop()
-
+label2 = Label(basicwindow, text = 'Please Enter Your Initial 8 Puzzle State ')
+label2.pack(fill = X)
+User_input = Entry()
+User_input.pack(fill = X)
+user_problem  = User_input.get()
+#print(user_problem)
 def Ast():
     node: Union[Node, bool] = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
     node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)

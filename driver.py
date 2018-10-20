@@ -4,6 +4,7 @@ from typing import Union
 import timeit
 from tkinter import *
 
+# 3,1,2,6,4,5,7,8,0
 start = timeit.default_timer()
 
 queue = deque()  # Queue for BFS
@@ -177,11 +178,6 @@ class Node:
             pass
 
 
-def split_list(a_list):
-    third = len(a_list) // 3
-    return a_list[:third], a_list[third:], a_list[:third:]
-
-
 def split_list(alist):
     length = len(alist)
     return [alist[i * length // 3: (i + 1) * length // 3]
@@ -192,13 +188,20 @@ def findPath(node: Node):
     dir_path.append(node.operation)
     state_path.append(node.state)
     if node.depth == 0:
-        return None
+        return node
     else:
         return findPath(node.parent)
 
 
 T = Text(basicwindow, height=20, width=50)
 T.pack()
+
+s = Scrollbar(basicwindow)
+T.focus_set()
+s.pack(side=RIGHT, fill=Y)
+T.pack(side=LEFT, fill=Y)
+s.config(command=T.yview)
+T.config(yscrollcommand=s.set)
 
 # State path
 stop = timeit.default_timer()
@@ -213,10 +216,8 @@ User_input.pack(fill=X)
 def Ast():
     myList = (User_input.get().split(","))
     myList = [int(i) for i in myList]
-
     node: Union[Node, bool] = Asearch(myList, [0, 1, 2, 3, 4, 5, 6, 7, 8])
     node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
-
     printInformation(node)
 
 
@@ -241,11 +242,13 @@ def printInformation(node):
     fw = open("output.txt", "w")
     for i in state_path[::-1]:
         a, b, c = split_list(i)
-        print(a)
-        print(b)
-        print(c)
-        print('\n\n')
-
+        T.insert(INSERT, a)
+        T.insert(INSERT, '\n')
+        T.insert(INSERT, b)
+        T.insert(INSERT, '\n')
+        T.insert(INSERT, c)
+        T.insert(INSERT, '\n')
+        T.insert(INSERT, '\n\n')
     fw.write("path_to_goal:")  # Direction path
     fw.write(str([i for i in dir_path[::-1] if i is not '']))
     fw.write("\ncost_of_path:")  # Path cost

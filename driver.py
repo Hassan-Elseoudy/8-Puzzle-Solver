@@ -4,11 +4,7 @@ from typing import Union
 import timeit
 from tkinter import *
 
-
-
-
 start = timeit.default_timer()
-
 
 queue = deque()  # Queue for BFS
 stack = deque()  # Stack for DFS
@@ -17,11 +13,15 @@ heapqu = PriorityQueue()  # Priority queue for A*
 state_path = []
 dir_path = []
 explored = list()
+
 basicwindow = Tk()
-lable = Label(basicwindow, text = "8 P U Z Z L E " , bg='blue')
-lable.pack(fill = X)
-label1 = Label(basicwindow, text='Choose The Solving Algorithim',bg='green')
-label1.pack(fill = X)
+
+lable = Label(basicwindow, text="8 P U Z Z L E ", bg='blue')
+lable.pack(fill=X)
+
+label1 = Label(basicwindow, text='Choose The Solving Algorithim', bg='green')
+label1.pack(fill=X)
+
 
 def bfs(initial_state, goal_state):
     queue.append(createNode(initial_state, "bfs", None, "", 0, 0))
@@ -93,13 +93,10 @@ def Asearch(initial_state, goal_state):
                 current_node = temp[current_nodeIndex]
                 temp.remove(current_node)
                 current_node.cost = int(manhatn(current_node.state)) + neighbour.depth
-         #       print(current_node.cost)
                 temp.append(current_node)
 
         for i in range(len(temp)):
             heapqu.put(temp[i])
-
-        #print(heapqu.qsize())
 
     return False
 
@@ -145,7 +142,7 @@ def left(state):
 
 
 def manhatn(state):
-    manhatn_cost : int = 0
+    manhatn_cost: int = 0
     state = list(state)
     for i in range(9):
         manhatn_cost += abs(state[i] / 3 - (i % 3)) + abs(state[i] % 3 - (i / 3))
@@ -179,20 +176,17 @@ class Node:
         else:
             pass
 
+
 def split_list(a_list):
-    third = len(a_list)//3
-    return a_list[:third], a_list[third:] , a_list[:third:]
+    third = len(a_list) // 3
+    return a_list[:third], a_list[third:], a_list[:third:]
 
-#intial=[3, 1, 2, 6, 4, 5, 7, 8, 0]
-#goal=[0, 1, 2, 3, 4, 5, 6, 7, 8]
-
-#node: Union[Node, bool] = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
-#node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
 
 def split_list(alist):
     length = len(alist)
-    return [ alist[i*length // 3: (i+1)*length // 3]
-             for i in range(3) ]
+    return [alist[i * length // 3: (i + 1) * length // 3]
+            for i in range(3)]
+
 
 def findPath(node: Node):
     dir_path.append(node.operation)
@@ -201,96 +195,61 @@ def findPath(node: Node):
         return None
     else:
         return findPath(node.parent)
-#label1 = Label(basicwindow, text = 'test')
-#label1.grid(row=0)
-#label1.pack()
-canvas = Canvas (basicwindow)
-canvas.pack()
-#blackline = canvas.create_line(0,9,100,50)
-#button1 = Button(basicwindow,text = 'A* Search',command =Asearch)
-#button1.pack(fill = X)
-#button2 = Button(basicwindow,text = 'DFS Search',command =dfs)
-#button2.pack(fill = X)
-#button3 = Button(basicwindow,text = 'BFS Search',command =bfs)
-#button3.pack(fill = X)
-#fw = open("output.txt" , "w")
-#findPath(node)
+
+
+T = Text(basicwindow, height=20, width=50)
+T.pack()
+
 # State path
 stop = timeit.default_timer()
-#basicwindow.mainloop()
-label2 = Label(basicwindow, text = 'Please Enter Your Initial 8 Puzzle State ')
-label2.pack(fill = X)
-User_input = Entry()
-User_input.pack(fill = X)
-user_problem  = User_input.get()
-#print(user_problem)
+
+label2 = Label(basicwindow, text='Please Enter Your Initial 8 Puzzle State ')
+label2.pack(fill=X)
+
+User_input = Entry(basicwindow)
+User_input.pack(fill=X)
+
+
 def Ast():
-    node: Union[Node, bool] = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+    myList = (User_input.get().split(","))
+    myList = [int(i) for i in myList]
+
+    node: Union[Node, bool] = Asearch(myList, [0, 1, 2, 3, 4, 5, 6, 7, 8])
     node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
-    findPath(node)
-    fw = open("output.txt", "w")
-    for i in state_path[::-1]:
-        a, b, c = split_list(i)
-        print(a)
-        print(b)
-        print(c, '\n', '\n')
-    fw.write("path_to_goal:")  # Direction path
-    fw.write(str([i for i in dir_path[::-1] if i is not '']))
-    fw.write("\ncost_of_path:")  # Path cost
-    fw.write(str(node.cost))
-    fw.write("\nnodes_expanded:")  # nodes explored
-    fw.write(str(explored.__len__()))
-    fw.write("\nsearch_depth:")  # Path depth
-    fw.write(str(node.depth + 1))
-    fw.write("\nrunning_time:")
-    fw.write(str(stop - start))
-    fw.close()
-    print([i for i in dir_path[::-1] if i is not ''])  # Direction path
-    print(node.cost)  # Path cost
-    print(explored.__len__())  # nodes explored
-    print(node.depth + 1)  # Path depth
+
+    printInformation(node)
 
 
 def DFS():
-    node: Union[Node, bool] = dfs([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+    myList = (User_input.get().split(","))
+    myList = [int(i) for i in myList]
+    node: Union[Node, bool] = dfs(myList, [0, 1, 2, 3, 4, 5, 6, 7, 8])
     node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
-    findPath(node)
-    fw = open("output.txt", "w")
-    for i in state_path[::-1]:
-        a, b, c = split_list(i)
-        print(a)
-        print(b)
-        print(c, '\n', '\n')
-    fw.write("path_to_goal:")  # Direction path
-    fw.write(str([i for i in dir_path[::-1] if i is not '']))
-    fw.write("\ncost_of_path:")  # Path cost
-    fw.write(str(node.cost))
-    fw.write("\nnodes_expanded:")  # nodes explored
-    fw.write(str(explored.__len__()))
-    fw.write("\nsearch_depth:")  # Path depth
-    fw.write(str(node.depth + 1))
-    fw.write("\nrunning_time:")
-    fw.write(str(stop - start))
-    fw.close()
-    print([i for i in dir_path[::-1] if i is not ''])  # Direction path
-    print(node.cost)  # Path cost
-    print(explored.__len__())  # nodes explored
-    print(node.depth + 1)  # Path depth
+    printInformation(node)
+
 
 def BFS():
-    node: Union[Node, bool] = bfs([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+    myList = (User_input.get().split(","))
+    myList = [int(i) for i in myList]
+    node: Union[Node, bool] = bfs(myList, [0, 1, 2, 3, 4, 5, 6, 7, 8])
     node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
+    printInformation(node)
+
+
+def printInformation(node):
     findPath(node)
     fw = open("output.txt", "w")
     for i in state_path[::-1]:
         a, b, c = split_list(i)
         print(a)
         print(b)
-        print(c, '\n', '\n')
+        print(c)
+        print('\n\n')
+
     fw.write("path_to_goal:")  # Direction path
     fw.write(str([i for i in dir_path[::-1] if i is not '']))
     fw.write("\ncost_of_path:")  # Path cost
-    fw.write(str(node.cost))
+    fw.write(str(len(dir_path)))
     fw.write("\nnodes_expanded:")  # nodes explored
     fw.write(str(explored.__len__()))
     fw.write("\nsearch_depth:")  # Path depth
@@ -298,35 +257,12 @@ def BFS():
     fw.write("\nrunning_time:")
     fw.write(str(stop - start))
     fw.close()
-    print([i for i in dir_path[::-1] if i is not ''])  # Direction path
-    print(node.cost)  # Path cost
-    print(explored.__len__())  # nodes explored
-    print(node.depth + 1)  # Path depth
 
-#for i in state_path[::-1]:
- #   a,b,c= split_list(i)
-  #  print(a)
-   # print(b)
-    #print(c,'\n','\n')
-#fw.write("path_to_goal:")  # Direction path
-#fw.write(str([i for i in dir_path[::-1] if i is not '']))
-#fw.write("\ncost_of_path:")  # Path cost
-#fw.write(str(node.cost))
-#fw.write("\nnodes_expanded:")#nodes explored
-#fw.write(str(explored.__len__()))
-#fw.write("\nsearch_depth:")  # Path depth
-#fw.write(str(node.depth + 1))
-#fw.write("\nrunning_time:")
-#fw.write(str(stop - start))
-#fw.close()
-#print([i for i in dir_path[::-1] if i is not ''])  # Direction path
-#print(node.cost)  # Path cost
-#print(explored.__len__()) #nodes explored
-#print(node.depth + 1)  # Path depth
-button1 = Button(basicwindow,text = 'A* Search',command =Ast)
-button1.pack(fill = X)
-button2 = Button(basicwindow,text = 'DFS Search',command =DFS)
-button2.pack(fill = X)
-button3 = Button(basicwindow,text = 'BFS Search',command =BFS)
-button3.pack(fill = X)
+
+button1 = Button(basicwindow, text='A* Search', command=Ast)
+button1.pack(fill=X)
+button2 = Button(basicwindow, text='DFS Search', command=DFS)
+button2.pack(fill=X)
+button3 = Button(basicwindow, text='BFS Search', command=BFS)
+button3.pack(fill=X)
 basicwindow.mainloop()

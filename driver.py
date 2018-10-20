@@ -186,8 +186,8 @@ def split_list(a_list):
 #intial=[3, 1, 2, 6, 4, 5, 7, 8, 0]
 #goal=[0, 1, 2, 3, 4, 5, 6, 7, 8]
 
-node: Union[Node, bool] = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
-node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
+#node: Union[Node, bool] = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+#node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
 
 def split_list(alist):
     length = len(alist)
@@ -207,34 +207,121 @@ def findPath(node: Node):
 canvas = Canvas (basicwindow)
 canvas.pack()
 #blackline = canvas.create_line(0,9,100,50)
-button1 = Button(basicwindow,text = 'A* Search',command =Asearch)
-button1.pack(fill = X)
-button2 = Button(basicwindow,text = 'DFS Search',command =dfs)
-button2.pack(fill = X)
-button3 = Button(basicwindow,text = 'BFS Search',command =bfs)
-button3.pack(fill = X)
-fw = open("output.txt" , "w")
-findPath(node)
+#button1 = Button(basicwindow,text = 'A* Search',command =Asearch)
+#button1.pack(fill = X)
+#button2 = Button(basicwindow,text = 'DFS Search',command =dfs)
+#button2.pack(fill = X)
+#button3 = Button(basicwindow,text = 'BFS Search',command =bfs)
+#button3.pack(fill = X)
+#fw = open("output.txt" , "w")
+#findPath(node)
 # State path
 stop = timeit.default_timer()
+#basicwindow.mainloop()
+
+def Ast():
+    node: Union[Node, bool] = Asearch([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+    node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
+    findPath(node)
+    fw = open("output.txt", "w")
+    for i in state_path[::-1]:
+        a, b, c = split_list(i)
+        print(a)
+        print(b)
+        print(c, '\n', '\n')
+    fw.write("path_to_goal:")  # Direction path
+    fw.write(str([i for i in dir_path[::-1] if i is not '']))
+    fw.write("\ncost_of_path:")  # Path cost
+    fw.write(str(node.cost))
+    fw.write("\nnodes_expanded:")  # nodes explored
+    fw.write(str(explored.__len__()))
+    fw.write("\nsearch_depth:")  # Path depth
+    fw.write(str(node.depth + 1))
+    fw.write("\nrunning_time:")
+    fw.write(str(stop - start))
+    fw.close()
+    print([i for i in dir_path[::-1] if i is not ''])  # Direction path
+    print(node.cost)  # Path cost
+    print(explored.__len__())  # nodes explored
+    print(node.depth + 1)  # Path depth
+
+
+def DFS():
+    node: Union[Node, bool] = dfs([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+    node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
+    findPath(node)
+    fw = open("output.txt", "w")
+    for i in state_path[::-1]:
+        a, b, c = split_list(i)
+        print(a)
+        print(b)
+        print(c, '\n', '\n')
+    fw.write("path_to_goal:")  # Direction path
+    fw.write(str([i for i in dir_path[::-1] if i is not '']))
+    fw.write("\ncost_of_path:")  # Path cost
+    fw.write(str(node.cost))
+    fw.write("\nnodes_expanded:")  # nodes explored
+    fw.write(str(explored.__len__()))
+    fw.write("\nsearch_depth:")  # Path depth
+    fw.write(str(node.depth + 1))
+    fw.write("\nrunning_time:")
+    fw.write(str(stop - start))
+    fw.close()
+    print([i for i in dir_path[::-1] if i is not ''])  # Direction path
+    print(node.cost)  # Path cost
+    print(explored.__len__())  # nodes explored
+    print(node.depth + 1)  # Path depth
+
+def BFS():
+    node: Union[Node, bool] = bfs([3, 1, 2, 6, 4, 5, 7, 8, 0], [0, 1, 2, 3, 4, 5, 6, 7, 8])
+    node = Node(node.state, node.algorithm, node.parent, node.operation, node.cost, node.depth)
+    findPath(node)
+    fw = open("output.txt", "w")
+    for i in state_path[::-1]:
+        a, b, c = split_list(i)
+        print(a)
+        print(b)
+        print(c, '\n', '\n')
+    fw.write("path_to_goal:")  # Direction path
+    fw.write(str([i for i in dir_path[::-1] if i is not '']))
+    fw.write("\ncost_of_path:")  # Path cost
+    fw.write(str(node.cost))
+    fw.write("\nnodes_expanded:")  # nodes explored
+    fw.write(str(explored.__len__()))
+    fw.write("\nsearch_depth:")  # Path depth
+    fw.write(str(node.depth + 1))
+    fw.write("\nrunning_time:")
+    fw.write(str(stop - start))
+    fw.close()
+    print([i for i in dir_path[::-1] if i is not ''])  # Direction path
+    print(node.cost)  # Path cost
+    print(explored.__len__())  # nodes explored
+    print(node.depth + 1)  # Path depth
+
+#for i in state_path[::-1]:
+ #   a,b,c= split_list(i)
+  #  print(a)
+   # print(b)
+    #print(c,'\n','\n')
+#fw.write("path_to_goal:")  # Direction path
+#fw.write(str([i for i in dir_path[::-1] if i is not '']))
+#fw.write("\ncost_of_path:")  # Path cost
+#fw.write(str(node.cost))
+#fw.write("\nnodes_expanded:")#nodes explored
+#fw.write(str(explored.__len__()))
+#fw.write("\nsearch_depth:")  # Path depth
+#fw.write(str(node.depth + 1))
+#fw.write("\nrunning_time:")
+#fw.write(str(stop - start))
+#fw.close()
+#print([i for i in dir_path[::-1] if i is not ''])  # Direction path
+#print(node.cost)  # Path cost
+#print(explored.__len__()) #nodes explored
+#print(node.depth + 1)  # Path depth
+button1 = Button(basicwindow,text = 'A* Search',command =Ast)
+button1.pack(fill = X)
+button2 = Button(basicwindow,text = 'DFS Search',command =DFS)
+button2.pack(fill = X)
+button3 = Button(basicwindow,text = 'BFS Search',command =BFS)
+button3.pack(fill = X)
 basicwindow.mainloop()
-for i in state_path[::-1]:
-    a,b,c= split_list(i)
-    print(a)
-    print(b)
-    print(c,'\n','\n')
-fw.write("path_to_goal:")  # Direction path
-fw.write(str([i for i in dir_path[::-1] if i is not '']))
-fw.write("\ncost_of_path:")  # Path cost
-fw.write(str(node.cost))
-fw.write("\nnodes_expanded:")#nodes explored
-fw.write(str(explored.__len__()))
-fw.write("\nsearch_depth:")  # Path depth
-fw.write(str(node.depth + 1))
-fw.write("\nrunning_time:")
-fw.write(str(stop - start))
-fw.close()
-print([i for i in dir_path[::-1] if i is not ''])  # Direction path
-print(node.cost)  # Path cost
-print(explored.__len__()) #nodes explored
-print(node.depth + 1)  # Path depth

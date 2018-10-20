@@ -7,9 +7,9 @@ from tkinter import *
 # 3,1,2,6,4,5,7,8,0
 start = timeit.default_timer()
 
-queue = deque()  # Queue for BFS
-stack = deque()  # Stack for DFS
-heapqu = PriorityQueue()  # Priority queue for A*
+
+
+
 
 state_path = []
 dir_path = []
@@ -25,6 +25,7 @@ label1.pack(fill=X)
 
 
 def bfs(initial_state, goal_state):
+    queue = deque()  # Queue for BFS
     queue.append(createNode(initial_state, "bfs", None, "", 0, 0))
     while len(queue):
         current_node: Node = queue.popleft()
@@ -41,6 +42,7 @@ def bfs(initial_state, goal_state):
 
 
 def dfs(initial_state, goal_state):
+    stack = deque()  # Stack for DFS
     stack.append(createNode(initial_state, "dfs", None, "", 0, 0))
     while len(stack):
         current_node: Node = stack.pop()
@@ -70,6 +72,7 @@ def expandNode(node):
 
 
 def Asearch(initial_state, goal_state):
+    heapqu = PriorityQueue()  # Priority queue for A*
     heapqu.put(createNode(initial_state, "ast", None, "", 0, 0))
     while not heapqu.empty():
 
@@ -238,6 +241,7 @@ def BFS():
 
 
 def printInformation(node):
+    T.delete(1.0,END)
     findPath(node)
     fw = open("output.txt", "w")
     for i in state_path[::-1]:
@@ -249,16 +253,29 @@ def printInformation(node):
         T.insert(INSERT, c)
         T.insert(INSERT, '\n')
         T.insert(INSERT, '\n\n')
+    T.insert(INSERT, "path_to_goal:")
     fw.write("path_to_goal:")  # Direction path
+    T.insert(INSERT,str([i for i in dir_path[::-1] if i is not '']))
     fw.write(str([i for i in dir_path[::-1] if i is not '']))
+    T.insert(INSERT, "\ncost_of_path:")
     fw.write("\ncost_of_path:")  # Path cost
-    fw.write(str(len(dir_path)))
+    T.insert(INSERT, str(len(dir_path) - 1))
+    fw.write(str(len(dir_path) - 1))
+    T.insert(INSERT, "\nnodes_expanded:")
     fw.write("\nnodes_expanded:")  # nodes explored
+    T.insert(INSERT, str(explored.__len__()))
     fw.write(str(explored.__len__()))
+    T.insert(INSERT, "\nsearch_depth:")
     fw.write("\nsearch_depth:")  # Path depth
+    T.insert(INSERT, str(node.depth + 1))
     fw.write(str(node.depth + 1))
+    T.insert(INSERT, ("\nrunning_time:"))
     fw.write("\nrunning_time:")
+    T.insert(INSERT, str(stop - start))
     fw.write(str(stop - start))
+    state_path.clear()
+    dir_path.clear()
+    explored.clear()
     fw.close()
 
 
